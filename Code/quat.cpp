@@ -13,11 +13,7 @@ quat angleAxis(float angle, const vec3& axis) {
 		cosf(angle * 0.5f)
 	);
 }
-/*
-quat angleAxis_Eigen(float angle, const vec3& axis) {
-	Eigen::AngleAxisf(angle, axis.normalized());
-}
-*/
+
 quat fromTo(const vec3& from, const vec3& to) {
 	vec3 f = normalized(from);
 	vec3 t = normalized(to);
@@ -48,28 +44,15 @@ quat fromTo(const vec3& from, const vec3& to) {
 		dot(f, half)
 	);
 }
-/*
-quat fromTo_Eigen(const vec3& from, const vec3& to)
-{
-	return Eigen::Quaternionf::FromTwoVectors(from, to);
-}
-*/
+
 vec3 getAxis(const quat& quat) {
 	return normalized(vec3(quat.x, quat.y, quat.z));
 }
-/*
-vec3 getAxis_Eigen(const quat& quat) {
-	return Eigen::AngleAxisf(quat).axis();
-}
-*/
+
 float getAngle(const quat& quat) {
 	return 2.0f * acosf(quat.w);
 }
- /*
-float getAngle_Eigen(const quat& quat) {
-	return Eigen::AngleAxisf(quat).angle();
-}
-*/
+
 quat operator+(const quat& a, const quat& b) {
 	return quat(
 		a.x + b.x,
@@ -122,19 +105,11 @@ bool sameOrientation(const quat& left, const quat& right) {
 float dot(const quat& a, const quat& b) {
 	return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
-/*
-float dot_Eigen(const quat& a, const quat& b) {
-	return a.dot(b);
-}
-*/
+
 float lenSq(const quat& q) {
 	return q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
 }
-/*
-float lenSq_Eigen(const quat& q) {
-	return q.squaredNorm();
-}
-*/
+
 float len(const quat& q) {
 	float lenSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
 	if (lenSq < QUAT_EPSILON) {
@@ -142,11 +117,7 @@ float len(const quat& q) {
 	}
 	return sqrtf(lenSq);
 }
-/*
-float len_Eigen(const quat& q) {
-	return q.norm();
-}
-*/
+
 void normalize(quat& q) {
 	float lenSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
 	if (lenSq < QUAT_EPSILON) {
@@ -159,11 +130,7 @@ void normalize(quat& q) {
 	q.z *= i_len;
 	q.w *= i_len;
 }
-/*
-void normalize_Eigen(quat& q) {
-	q.normalize();
-}
-*/
+
 quat normalized(const quat& q) {
 	float lenSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
 	if (lenSq < QUAT_EPSILON) {
@@ -178,11 +145,7 @@ quat normalized(const quat& q) {
 		q.w * i_len
 	);
 }
-/*
-quat normalized_Eigen(const quat& q) {
-	q.normalized();
-}
-*/
+
 quat conjugate(const quat& q) {
 	return quat(
 		-q.x,
@@ -191,11 +154,7 @@ quat conjugate(const quat& q) {
 		q.w
 	);
 }
-/*
-quat conjugate_Eigen(const quat& q) {
-	return quat.conjugate();
-}
-*/
+
 quat inverse(const quat& q) {
 	float lenSq = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
 	if (lenSq < QUAT_EPSILON) {
@@ -211,11 +170,7 @@ quat inverse(const quat& q) {
 		q.w * recip
 	);
 }
-/*
-quat inverse_Eigen(const quat& q) {
-	return q.inverse();
-}
-*/
+
 quat operator*(const quat& Q1, const quat& Q2) {
 	return quat(
 		Q2.x * Q1.w + Q2.y * Q1.z - Q2.z * Q1.y + Q2.w * Q1.x,
@@ -259,7 +214,8 @@ quat slerp(const quat& start, const quat& end, float t) {
 		return nlerp(start, end, t);
 	}
 
-	return normalized(((inverse(start) * end) ^ t) * start);
+	//return normalized(((inverse(start) * end) ^ t) * start);
+	return normalized(start * ((inverse(start) * end) ^ t));
 }
 
 quat lookRotation(const vec3& direcion, const vec3& up) {
@@ -295,14 +251,7 @@ mat4 quatToMat4(const quat& q) {
 		0, 0, 0, 1
 	);
 }
-/*
-mat4 quatToMat4_Eigen(const quat& q) {
-	mat4 affine;
-	mat4.setIdentity();
-	affine.block<3,3>(0,0) = q.toRotationMatrix(); // quaternion is required to be normalized
-	return affine;
-}
-*/
+
 quat mat4ToQuat(const mat4& m) {
 	vec3 up = normalized(vec3(m.up.x, m.up.y, m.up.z));
 	vec3 forward = normalized(vec3(m.forward.x, m.forward.y, m.forward.z));
@@ -311,8 +260,3 @@ quat mat4ToQuat(const mat4& m) {
 
 	return lookRotation(forward, up);
 }
-/*
-quat mat4ToQuat_Eigen(const mat4& m) {
-	return Quaternionf(m.block<3,3>(0,0));
-	}
-*/
