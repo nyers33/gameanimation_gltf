@@ -5,6 +5,7 @@
 ## Changes
 * glfw OpenGL context management instead of Win32
 * glew OpenGL loader instead of glad
+* added glm & gtest (math fixes)
 * new character rig and animation
 * wip Rokoko ML animation retarget
 

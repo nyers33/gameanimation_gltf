@@ -45,39 +45,13 @@ ENDIF(WIN32)
 
 include(FetchContent)
 
-### Adding GLEW
-#add_subdirectory(./src_extern/glew-2.1.0)
-FetchContent_Declare(
-    glew
-    URL "https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0.zip"
-	SOURCE_DIR ${CMAKE_SOURCE_DIR}/external/glew
-)
-FetchContent_GetProperties(glew)
-if(NOT glew_POPULATED)
-    FetchContent_Populate(glew)
-    # top level doesn't contain the CMakeLists.txt, it is in the "build/cmake" subdirectory
-    add_subdirectory(${glew_SOURCE_DIR}/build/cmake ${glew_BINARY_DIR} EXCLUDE_FROM_ALL)
-	set_target_properties(glew_s PROPERTIES FOLDER "External Dependencies")
-endif()
-set(GLEW_INCLUDE_DIRS ${glew_SOURCE_DIR}/include)
-set(GLEW_LIBRARY_DIRS ${glew_BINARY_DIR}/libs)
-set(GLEW_LIBRARIES glew_s)
+include(cmake/FetchGLEW.cmake)
+include(cmake/FetchGLFW.cmake)
+include(cmake/FetchGLM.cmake)
 
-### Adding GLFW
-#add_subdirectory(./src_extern/glfw-3.3.2)
-FetchContent_Declare(
-    glfw
-    URL "https://github.com/glfw/glfw/releases/download/3.3.2/glfw-3.3.2.zip"
-	SOURCE_DIR ${CMAKE_SOURCE_DIR}/external/glfw
-)
-if(NOT glfw_POPULATED)
-    FetchContent_Populate(glfw)
-    set(GLFW_BUILD_EXAMPLES OFF CACHE INTERNAL "Build the GLFW example programs")
-    set(GLFW_BUILD_TESTS OFF CACHE INTERNAL "Build the GLFW test programs")
-    set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "Build the GLFW documentation")
-    set(GLFW_INSTALL OFF CACHE INTERNAL "Generate installation target")
-    add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR} EXCLUDE_FROM_ALL)
-	set_target_properties(glfw PROPERTIES FOLDER "External Dependencies")
+if(BUILD_TESTING)
+	include(cmake/FetchGTest.cmake)
+	enable_testing()
 endif()
 
 find_package(OpenGL REQUIRED)
