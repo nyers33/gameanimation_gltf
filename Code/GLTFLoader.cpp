@@ -1,5 +1,7 @@
 #pragma warning(disable : 26812)
 
+#define CGLTF_IMPLEMENTATION
+#include "cgltf.h"
 #include "GLTFLoader.h"
 #include <iostream>
 #include "Transform.h"

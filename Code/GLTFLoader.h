@@ -1,13 +1,14 @@
 #ifndef _H_GLTFLOADER_
 #define _H_GLTFLOADER_
 
-#include "cgltf.h"
 #include "Pose.h"
 #include "Skeleton.h"
 #include "Mesh.h"
 #include "Clip.h"
 #include <vector>
 #include <string>
+
+struct cgltf_data;
 
 cgltf_data* LoadGLTFFile(const char* path);
 void FreeGLTFFile(cgltf_data* handle);

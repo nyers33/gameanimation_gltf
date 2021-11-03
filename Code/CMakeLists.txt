@@ -62,9 +62,6 @@ set(SRC_OGL
 )
 
 set(SRC_GLTF
-	cgltf.h
-	cgltf.c
-
 	GLTFLoader.h
 	GLTFLoader.cpp
 )
@@ -72,6 +69,7 @@ set(SRC_GLTF
 add_executable(${APP_NAME} main.cpp Sample.h Sample.cpp ${SRC_MATH} ${SRC_ANIMATION} ${SRC_RENDERING} ${SRC_OGL} ${SRC_GLTF})
 target_link_libraries(${APP_NAME} glfw glew_s OpenGL::GL)
 target_include_directories(${APP_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR} ${GLEW_INCLUDE_DIRS})
+target_include_directories(${APP_NAME} PUBLIC ${CGLTF_INCLUDE_DIRS})
 
 source_group("sources" FILES main.cpp Sample.h Sample.cpp)
 source_group("sources\\Math" FILES ${SRC_MATH})

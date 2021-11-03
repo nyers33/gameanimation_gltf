@@ -48,6 +48,7 @@ include(FetchContent)
 include(cmake/FetchGLEW.cmake)
 include(cmake/FetchGLFW.cmake)
 include(cmake/FetchGLM.cmake)
+include(cmake/FetchCGLTF.cmake)
 
 if(BUILD_TESTING)
 	include(cmake/FetchGTest.cmake)
