@@ -1,12 +1,13 @@
 # Hands-On C++ Game Animation Programming
 
 <p align="center"><img src="media/robot_sidebyside.png" width="640" /></p>
+<p align="center"><img src="media/knight_sidebyside.png" width="640" /></p>
 
 ## Changes
 * glfw OpenGL context management instead of Win32
 * glew OpenGL loader instead of glad
 * added glm & gtest (math fixes)
-* new character rig and animation
+* new character rig and animation (robot & knight)
 * wip Rokoko ML animation retarget
 
 ## References

@@ -1,1 +1,2 @@
-"C:\Users\...\Desktop\ffmpeg\bin\ffmpeg.exe" -i idle_%6d.png -i walk_%6d.png -i run_%6d.png -i talk_%6d.png -i sprint_%6d.png -filter_complex "[0:v][1:v][2:v][3:v][4:v]hstack=inputs=5[v]" -map "[v]" -r 24 -pix_fmt yuv420p blender_robot_anim.mp4
+"C:\Users\NyersCorp\Desktop\ffmpeg\bin\ffmpeg.exe" -i idle_%6d.png -i walk_%6d.png -i run_%6d.png -i talk_%6d.png -i sprint_%6d.png -filter_complex "[0:v][1:v][2:v][3:v][4:v]hstack=inputs=5[v]" -map "[v]" -r 24 -pix_fmt yuv420p blender_robot_anim.mp4
+"C:\Users\NyersCorp\Desktop\ffmpeg\bin\ffmpeg.exe" -i walk_%6d.png -i run_%6d.png -i powerup_%6d.png -i jump_%6d.png -i impact_%6d.png -filter_complex "[0:v][1:v][2:v][3:v][4:v]hstack=inputs=5[v]" -map "[v]" -r 24 -pix_fmt yuv420p blender_knight_anim.mp4

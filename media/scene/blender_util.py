@@ -31,11 +31,11 @@ for ob in bpy.context.scene.objects:
         for strip in track.strips:
             print(" " * 4, strip.name, strip.frame_start, strip.frame_end)
 
-# iterate through all keyframes
+# iterate through all keyframes Reference
 # action types, in order to filter the wanted curves if needed
 actionTypes = ('location','rotation_euler','rotation_quaternion','scale')
 # get the object from which we want the animation data
-obj = bpy.data.objects['Reference']
+obj = bpy.data.objects['Armature']
 # if it has some animation
 if obj.animation_data:
     # iterates over the wanted curves
@@ -50,7 +50,7 @@ if obj.animation_data:
 else:
     print("no data")
 
-# reposition animation and delete Tpose      
+# reposition animation 
 for action in bpy.data.actions:
     for fcurve in action.fcurves[0:3]:
         print( fcurve.data_path, fcurve.array_index )
@@ -61,3 +61,47 @@ for action in bpy.data.actions:
                 print( 'frame: ', kf.co.x, ' value: ', kf.co.y )
                 kf.co.y -= kf_1st_value
                 print( 'frame: ', kf.co.x, ' value: ', kf.co.y )
+
+# make animation in place at origin
+actions = [ bpy.data.objects['Armature'].animation_data.action ]
+for action in actions:
+	dist = 0
+	idx = 0
+	for fcurve in action.fcurves[0:3]:
+		print( fcurve.data_path, fcurve.array_index )
+		if ( abs( fcurve.keyframe_points[-1].co.y - fcurve.keyframe_points[0].co.y ) >= dist ):
+			dist = abs( fcurve.keyframe_points[-1].co.y - fcurve.keyframe_points[0].co.y )
+			idx = fcurve.array_index
+	fcurve = action.fcurves[idx]
+	for kf in fcurve.keyframe_points:
+		print( 'frame: ', kf.co.x, ' value: ', kf.co.y )
+		kf.co.y = 0.0
+
+
+# animation length per channel
+actions = [ bpy.data.objects['Armature'].animation_data.action ]
+for action in actions:
+	for fcurve in action.fcurves[0:-1]:
+		if fcurve.array_index != 0:
+			continue
+		kf = fcurve.keyframe_points
+		print( fcurve.data_path, fcurve.array_index, " || ", kf[0].co.x, " - ", kf[-1].co.x )
+
+
+# round animation last key position
+actions = [ bpy.data.objects['Armature'].animation_data.action ]
+for action in actions:
+	for fcurve in action.fcurves[0:-1]:
+		kf = fcurve.keyframe_points
+		kf[-1].co.x = ceil(kf[-1].co.x)
+
+# offset animation keys
+offset = 112
+actions = [ bpy.data.objects['Armature'].animation_data.action ]
+for action in actions:
+	for fcurve in action.fcurves[0:-1]:
+		print( fcurve.data_path, fcurve.array_index )
+		for kf in fcurve.keyframe_points:
+			print( 'frame: ', kf.co.x, ' value: ', kf.co.y )
+			kf.co.x += offset
+

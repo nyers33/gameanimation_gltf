@@ -34,6 +34,7 @@ for ob in context.scene.objects:
             if strip.frame_end > maxFrame:
                 maxFrame = strip.frame_end
     
+    maxFrame *= 2
     for track in ob.animation_data.nla_tracks:
         print("  ", track.name)
         track.is_solo = True
@@ -41,7 +42,7 @@ for ob in context.scene.objects:
             print(" " * 4, strip.name, strip.frame_start, strip.frame_end)
             for iFrame in range(int(strip.frame_start),int(maxFrame)+1):
                 scene.frame_set(1+(iFrame-1)%(int(strip.frame_end)))
-                context.scene.render.filepath = "C:\\Users\\NyersCorp\\Documents\\github\\minimal_glfw_gltf_eigen\\build\\"+track.name.lower()+"_"+'{0:06d}'.format(iFrame)
+                context.scene.render.filepath = "C:\\Users\\...\\Documents\\"+track.name.lower()+"_"+'{0:06d}'.format(iFrame)
                 ops.render.render(write_still=True)
 
 print('DONE')

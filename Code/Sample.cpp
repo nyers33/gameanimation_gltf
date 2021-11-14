@@ -6,7 +6,8 @@
 #include <GL/glew.h>
 
 void Sample::Initialize(const std::string& rootPath) {
-	cgltf_data* gltf = LoadGLTFFile((rootPath + "Assets/robot.gltf").c_str());
+	//cgltf_data* gltf = LoadGLTFFile((rootPath + "Assets/robot.gltf").c_str());
+	cgltf_data* gltf = LoadGLTFFile((rootPath + "Assets/knight.gltf").c_str());
 	LoadMeshes(mCPUMeshes, gltf);
 	mSkeleton = LoadSkeleton(gltf);
 	mClips = LoadAnimationClips(gltf);
@@ -19,8 +20,9 @@ void Sample::Initialize(const std::string& rootPath) {
 
 	mStaticShader = new Shader(rootPath + "Shaders/static.vert", rootPath + "Shaders/lit.frag");
 	mSkinnedShader = new Shader(rootPath + "Shaders/skinned.vert", rootPath + "Shaders/lit.frag");
-	mDiffuseTexture = new Texture((rootPath + "Assets/robot_basecolor.png").c_str());
-	
+	//mDiffuseTexture = new Texture((rootPath + "Assets/robot_basecolor.png").c_str());
+	mDiffuseTexture = new Texture((rootPath + "Assets/knight_basecolor.png").c_str());
+
 	mGPUAnimInfo.mAnimatedPose = mSkeleton.GetRestPose();
 	mGPUAnimInfo.mPosePalette.resize(mSkeleton.GetRestPose().Size());
 	mCPUAnimInfo.mAnimatedPose = mSkeleton.GetRestPose();
@@ -39,10 +41,10 @@ void Sample::Initialize(const std::string& rootPath) {
 
 	unsigned int numUIClips = (unsigned int)mClips.size();
 	for (unsigned int i = 0; i < numUIClips; ++i) {
-		if (mClips[i].GetName() == "Run") {
+		if (mClips[i].GetName() == "run") {
 			mCPUAnimInfo.mClip = i;
 		}
-		else if (mClips[i].GetName() == "Talk") {
+		else if (mClips[i].GetName() == "powerup") {
 			mGPUAnimInfo.mClip = i;
 		}
 	}
@@ -64,7 +66,7 @@ void Sample::Update(float deltaTime) {
 
 void Sample::Render(float inAspectRatio) {
 	mat4 projection = perspective(60.0f, inAspectRatio, 0.01f, 1000.0f);
-	mat4 view = lookAt(vec3(0.0f, 1.0f, 2.75f), vec3(0.0f, 1.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+	mat4 view = lookAt(vec3(0.0f, 1.0f + 0.1f, 2.5f), vec3(0.0f, 0.75f + 0.1f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
 	mat4 model;
 
 	// CPU Skinned Mesh
