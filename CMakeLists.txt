@@ -45,6 +45,7 @@ ENDIF(WIN32)
 
 include(FetchContent)
 
+include(cmake/FetchSTB.cmake)
 include(cmake/FetchGLEW.cmake)
 include(cmake/FetchGLFW.cmake)
 include(cmake/FetchGLM.cmake)
