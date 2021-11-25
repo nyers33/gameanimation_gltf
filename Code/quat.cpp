@@ -260,3 +260,41 @@ quat mat4ToQuat(const mat4& m) {
 
 	return lookRotation(forward, up);
 }
+
+/*
+quat mat4ToQuat(const mat4& m) {
+	// Converting a Rotation Matrix to a Quaternion  
+	// Mike Day, Insomniac Games - mday@insomniacgames.com
+	quat q;
+	float t;
+
+	if (m.c2r2 < 0)
+	{
+		if (m.c0r0 > m.c1r1)
+		{
+			t = 1 + m.c0r0 - m.c1r1 - m.c2r2;
+			q = quat(t, m.c0r1 + m.c1r0, m.c2r0 + m.c0r2, m.c1r2 - m.c2r1);
+		}
+		else
+		{
+			t = 1 - m.c0r0 + m.c1r1 - m.c2r2;
+			q = quat(m.c0r1 + m.c1r0, t, m.c1r2 + m.c2r1, m.c2r0 - m.c0r2);
+		}
+	}
+	else
+	{
+		if (m.c0r0 < -m.c1r1)
+		{
+			t = 1 - m.c0r0 - m.c1r1 + m.c2r2;
+			q = quat(m.c2r0 + m.c0r2, m.c1r2 + m.c2r1, t, m.c0r1 - m.c1r0);
+		}
+		else
+		{
+			t = 1 + m.c0r0 + m.c1r1 + m.c2r2;
+			q = quat(m.c1r2 - m.c2r1, m.c2r0 - m.c0r2, m.c0r1 - m.c1r0, t);
+		}
+	}
+
+	q = q * (0.5f / sqrtf(t));
+	return q;
+}*/
