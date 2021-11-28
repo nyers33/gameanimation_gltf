@@ -26,7 +26,7 @@ public:
 	void SetThreshold(float value);
 
 	bool Solve(const Transform& target);
-	bool Solve(const vec3& target);
+	bool Solve(const glm::vec3& target);
 };
 
 #endif

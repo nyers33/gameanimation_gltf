@@ -66,7 +66,7 @@ Transform Pose::operator[](unsigned int index) {
 	return GetGlobalTransform(index);
 }
 
-void Pose::GetMatrixPalette(std::vector<mat4>& out) {
+void Pose::GetMatrixPalette(std::vector<glm::mat4>& out) {
 	unsigned int size = Size();
 	if (out.size() != size) {
 		out.resize(size);

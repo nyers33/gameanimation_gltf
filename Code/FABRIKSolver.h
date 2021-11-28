@@ -7,14 +7,14 @@
 class FABRIKSolver {
 protected:
 	std::vector<Transform> mIKChain;
-	std::vector<vec3> mWorldChain;
+	std::vector<glm::vec3> mWorldChain;
 	std::vector<float> mLengths;
 	unsigned int mNumSteps;
 	float mThreshold;
 protected:
 	void IKChainToWorld();
-	void IterateForward(const vec3& goal);
-	void IterateBackward(const vec3& base);
+	void IterateForward(const glm::vec3& goal);
+	void IterateBackward(const glm::vec3& base);
 	void WorldToIKChain();
 public:
 	FABRIKSolver();
@@ -32,7 +32,7 @@ public:
 	void SetThreshold(float value);
 
 	bool Solve(const Transform& target);
-	bool Solve(const vec3& target);
+	bool Solve(const glm::vec3& target);
 };
 
 #endif

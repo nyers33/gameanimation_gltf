@@ -12,20 +12,20 @@ namespace GLTFHelpers {
 		Transform result;
 
 		if (node.has_matrix) {
-			mat4 mat(&node.matrix[0]);
+			glm::mat4 mat = glm::make_mat4(&node.matrix[0]);
 			result = mat4ToTransform(mat);
 		}
 
 		if (node.has_translation) {
-			result.position = vec3(node.translation[0], node.translation[1], node.translation[2]);
+			result.position = glm::vec3(node.translation[0], node.translation[1], node.translation[2]);
 		}
 
 		if (node.has_rotation) {
-			result.rotation = quat(node.rotation[0], node.rotation[1], node.rotation[2], node.rotation[3]);
+			result.rotation = glm::quat(node.rotation[3], node.rotation[0], node.rotation[1], node.rotation[2]);
 		}
 
 		if (node.has_scale) {
-			result.scale = vec3(node.scale[0], node.scale[1], node.scale[2]);
+			result.scale = glm::vec3(node.scale[0], node.scale[1], node.scale[2]);
 		}
 
 		return result;
@@ -112,38 +112,38 @@ namespace GLTFHelpers {
 		GetScalarValues(values, componentCount, accessor);
 		unsigned int acessorCount = (unsigned int)accessor.count;
 
-		std::vector<vec3>& positions = outMesh.GetPosition();
-		std::vector<vec3>& normals = outMesh.GetNormal();
-		std::vector<vec2>& texCoords = outMesh.GetTexCoord();
-		std::vector<ivec4>& influences = outMesh.GetInfluences();
-		std::vector<vec4>& weights = outMesh.GetWeights();
+		std::vector<glm::vec3>& positions = outMesh.GetPosition();
+		std::vector<glm::vec3>& normals = outMesh.GetNormal();
+		std::vector<glm::vec2>& texCoords = outMesh.GetTexCoord();
+		std::vector<glm::ivec4>& influences = outMesh.GetInfluences();
+		std::vector<glm::vec4>& weights = outMesh.GetWeights();
 
 		for (unsigned int i = 0; i < acessorCount; ++i) {
 			int index = i * componentCount;
 			switch (attribType) {
 			case cgltf_attribute_type_position:
-				positions.push_back(vec3(values[index + 0], values[index + 1], values[index + 2]));
+				positions.push_back(glm::vec3(values[index + 0], values[index + 1], values[index + 2]));
 				break;
 			case cgltf_attribute_type_texcoord:
-				texCoords.push_back(vec2(values[index + 0], values[index + 1]));
+				texCoords.push_back(glm::vec2(values[index + 0], values[index + 1]));
 				break;
 			case cgltf_attribute_type_weights:
-				weights.push_back(vec4(values[index + 0], values[index + 1], values[index + 2], values[index + 3]));
+				weights.push_back(glm::vec4(values[index + 0], values[index + 1], values[index + 2], values[index + 3]));
 				break;
 			case cgltf_attribute_type_normal:
 			{
-				vec3 normal = vec3(values[index + 0], values[index + 1], values[index + 2]);
-				if (lenSq(normal) < 0.000001f) {
-					normal = vec3(0, 1, 0);
+				glm::vec3 normal = glm::vec3(values[index + 0], values[index + 1], values[index + 2]);
+				if (glm::length2(normal) < 0.000001f) {
+					normal = glm::vec3(0, 1, 0);
 				}
-				normals.push_back(normalized(normal));
+				normals.push_back(glm::normalize(normal));
 			}
 			break;
 			case cgltf_attribute_type_joints:
 			{
 				// These indices are skin relative. This function has no information about the
 				// skin that is being parsed. Add +0.5f to round, since we can't read ints
-				ivec4 joints(
+				glm::ivec4 joints(
 					(int)(values[index + 0] + 0.5f),
 					(int)(values[index + 1] + 0.5f),
 					(int)(values[index + 2] + 0.5f),
@@ -249,15 +249,15 @@ std::vector<Clip> LoadAnimationClips(cgltf_data* data) {
 			int nodeId = GLTFHelpers::GetNodeIndex(target, data->nodes, numNodes);
 			if (channel.target_path == cgltf_animation_path_type_translation) {
 				VectorTrack& track = result[i][nodeId].GetPositionTrack();
-				GLTFHelpers::TrackFromChannel<vec3, 3>(track, channel);
+				GLTFHelpers::TrackFromChannel<glm::vec3, 3>(track, channel);
 			}
 			else if (channel.target_path == cgltf_animation_path_type_scale) {
 				VectorTrack& track = result[i][nodeId].GetScaleTrack();
-				GLTFHelpers::TrackFromChannel<vec3, 3>(track, channel);
+				GLTFHelpers::TrackFromChannel<glm::vec3, 3>(track, channel);
 			}
 			else if (channel.target_path == cgltf_animation_path_type_rotation) {
 				QuaternionTrack& track = result[i][nodeId].GetRotationTrack();
-				GLTFHelpers::TrackFromChannel<quat, 4>(track, channel);
+				GLTFHelpers::TrackFromChannel<glm::quat, 4>(track, channel);
 			}
 		}
 		result[i].RecalculateDuration();
@@ -283,9 +283,9 @@ Pose LoadBindPose(cgltf_data* data) {
 		for (unsigned int j = 0; j < numJoints; ++j) {
 			// Read the ivnerse bind matrix of the joint
 			float* matrix = &(invBindAccessor[j * 16]);
-			mat4 invBindMatrix = mat4(matrix);
+			glm::mat4 invBindMatrix = glm::make_mat4(matrix);
 			// invert, convert to transform
-			mat4 bindMatrix = inverse(invBindMatrix);
+			glm::mat4 bindMatrix = glm::inverse(invBindMatrix);
 			Transform bindTransform = mat4ToTransform(bindMatrix);
 			// Set that transform in the worldBindPose.
 			cgltf_node* jointNode = skin->joints[j];

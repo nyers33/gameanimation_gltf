@@ -1,42 +1,42 @@
 #include "Track.h"
 
 template Track<float, 1>;
-template Track<vec3, 3>;
-template Track<quat, 4>;
+template Track<glm::vec3, 3>;
+template Track<glm::quat, 4>;
 
 namespace TrackHelpers {
 	inline float Interpolate(float a, float b, float t) {
 		return a + (b - a) * t;
 	}
 
-	inline vec3 Interpolate(const vec3& a, const vec3& b, float t) {
-		return lerp(a, b, t);
+	inline glm::vec3 Interpolate(const glm::vec3& a, const glm::vec3& b, float t) {
+		return glm::mix(a, b, t);
 	}
 
-	inline quat Interpolate(const quat& a, const quat& b, float t) {
-		quat result = mix(a, b, t);
-		if (dot(a, b) < 0) { // Neighborhood
-			result = mix(a, -b, t);
+	inline glm::quat Interpolate(const glm::quat& a, const glm::quat& b, float t) {
+		glm::quat result = glm::slerp(a, b, t);
+		if (glm::dot(a, b) < 0) { // Neighborhood
+			result = glm::slerp(a, -b, t);
 		}
-		return normalized(result); //NLerp, not slerp
+		return glm::normalize(result); //NLerp, not slerp
 	}
 	// Hermite helpers
 	inline float AdjustHermiteResult(float f) {
 		return f;
 	}
 
-	inline vec3 AdjustHermiteResult(const vec3& v) {
+	inline glm::vec3 AdjustHermiteResult(const glm::vec3& v) {
 		return v;
 	}
 
-	inline quat AdjustHermiteResult(const quat& q) {
-		return normalized(q);
+	inline glm::quat AdjustHermiteResult(const glm::quat& q) {
+		return glm::normalize(q);
 	}
 
 	inline void Neighborhood(const float& a, float& b) { }
-	inline void Neighborhood(const vec3& a, vec3& b) { }
-	inline void Neighborhood(const quat& a, quat& b) {
-		if (dot(a, b) < 0) {
+	inline void Neighborhood(const glm::vec3& a, glm::vec3& b) { }
+	inline void Neighborhood(const glm::quat& a, glm::quat& b) {
+		if (glm::dot(a, b) < 0) {
 			b = -b;
 		}
 	}
@@ -173,13 +173,13 @@ template<> float Track<float, 1>::Cast(float* value) {
 	return value[0];
 }
 
-template<> vec3 Track<vec3, 3>::Cast(float* value) {
-	return vec3(value[0], value[1], value[2]);
+template<> glm::vec3 Track<glm::vec3, 3>::Cast(float* value) {
+	return glm::vec3(value[0], value[1], value[2]);
 }
 
-template<> quat Track<quat, 4>::Cast(float* value) {
-	quat r = quat(value[0], value[1], value[2], value[3]);
-	return normalized(r);
+template<> glm::quat Track<glm::quat, 4>::Cast(float* value) {
+	glm::quat r = glm::quat(value[3], value[0], value[1], value[2]);
+	return glm::normalize(r);
 }
 
 template<typename T, int N>

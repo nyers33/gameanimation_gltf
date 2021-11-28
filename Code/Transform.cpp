@@ -6,7 +6,7 @@ Transform combine(const Transform& a, const Transform& b) {
 	Transform out;
 
 	out.scale = a.scale * b.scale;
-	out.rotation = b.rotation * a.rotation;
+	out.rotation = a.rotation * b.rotation;
 
 	out.position = a.rotation * (a.scale * b.position);
 	out.position = a.position + out.position;
@@ -19,25 +19,26 @@ Transform inverse(const Transform& t) {
 
 	inv.rotation = inverse(t.rotation);
 
+	const float VEC3_EPSILON = 0.000001f;
 	inv.scale.x = fabs(t.scale.x) < VEC3_EPSILON ? 0.0f : 1.0f / t.scale.x;
 	inv.scale.y = fabs(t.scale.y) < VEC3_EPSILON ? 0.0f : 1.0f / t.scale.y;
 	inv.scale.z = fabs(t.scale.z) < VEC3_EPSILON ? 0.0f : 1.0f / t.scale.z;
 
-	vec3 invTranslation = t.position * -1.0f;
+	glm::vec3 invTranslation = t.position * -1.0f;
 	inv.position = inv.rotation * (inv.scale * invTranslation);
 
 	return inv;
 }
 
 Transform mix(const Transform& a, const Transform& b, float t) {
-	quat bRot = b.rotation;
-	if (dot(a.rotation, bRot) < 0.0f) {
+	glm::quat bRot = b.rotation;
+	if (glm::dot(a.rotation, bRot) < 0.0f) {
 		bRot = -bRot;
 	}
 	return Transform(
-		lerp(a.position, b.position, t),
-		nlerp(a.rotation, bRot, t),
-		lerp(a.scale, b.scale, t));
+		glm::mix(a.position, b.position, t),
+		glm::normalize(glm::slerp(a.rotation, bRot, t)),
+		glm::mix(a.scale, b.scale, t));
 }
 
 bool operator==(const Transform& a, const Transform& b) {
@@ -50,11 +51,11 @@ bool operator!=(const Transform& a, const Transform& b) {
 	return !(a == b);
 }
 
-mat4 transformToMat4(const Transform& t) {
+glm::mat4 transformToMat4(const Transform& t) {
 	// First, extract the rotation basis of the transform
-	vec3 x = t.rotation * vec3(1, 0, 0);
-	vec3 y = t.rotation * vec3(0, 1, 0);
-	vec3 z = t.rotation * vec3(0, 0, 1);
+	glm::vec3 x = t.rotation * glm::vec3(1, 0, 0);
+	glm::vec3 y = t.rotation * glm::vec3(0, 1, 0);
+	glm::vec3 z = t.rotation * glm::vec3(0, 0, 1);
 
 	// Next, scale the basis vectors
 	x = x * t.scale.x;
@@ -62,10 +63,10 @@ mat4 transformToMat4(const Transform& t) {
 	z = z * t.scale.z;
 
 	// Extract the position of the transform
-	vec3 p = t.position;
+	glm::vec3 p = t.position;
 
 	// Create matrix
-	return mat4(
+	return glm::mat4(
 		x.x, x.y, x.z, 0, // X basis (& Scale)
 		y.x, y.y, y.z, 0, // Y basis (& scale)
 		z.x, z.y, z.z, 0, // Z basis (& scale)
@@ -73,32 +74,26 @@ mat4 transformToMat4(const Transform& t) {
 	);
 }
 
-Transform mat4ToTransform(const mat4& m) {
+Transform mat4ToTransform(const glm::mat4& m) {
+	// Decomposes the mode matrix to translations, rotation scale components
+	glm::vec3 scale;
+	glm::quat rotation;
+	glm::vec3 translation;
+	glm::vec3 skew;
+	glm::vec4 perspective;
+
+	glm::decompose(m, scale, rotation, translation, skew, perspective);
+
 	Transform out;
-
-	out.position = vec3(m.v[12], m.v[13], m.v[14]);
-	out.rotation = mat4ToQuat(m);
-
-	mat4 rotScaleMat(
-		m.v[0], m.v[1], m.v[2], 0,
-		m.v[4], m.v[5], m.v[6], 0,
-		m.v[8], m.v[9], m.v[10], 0,
-		0, 0, 0, 1
-	);
-	mat4 invRotMat = quatToMat4(inverse(out.rotation));
-	mat4 scaleSkewMat = rotScaleMat * invRotMat;
-
-	out.scale = vec3(
-		scaleSkewMat.v[0],
-		scaleSkewMat.v[5],
-		scaleSkewMat.v[10]
-	);
+	out.position = translation;
+	out.rotation = rotation;
+	out.scale = scale;
 
 	return out;
 }
 
-vec3 transformPoint(const Transform& a, const vec3& b) {
-	vec3 out;
+glm::vec3 transformPoint(const Transform& a, const glm::vec3& b) {
+	glm::vec3 out;
 
 	out = a.rotation * (a.scale * b);
 	out = a.position + out;
@@ -106,8 +101,8 @@ vec3 transformPoint(const Transform& a, const vec3& b) {
 	return out;
 }
 
-vec3 transformVector(const Transform& a, const vec3& b) {
-	vec3 out;
+glm::vec3 transformVector(const Transform& a, const glm::vec3& b) {
+	glm::vec3 out;
 
 	out = a.rotation * (a.scale * b);
 

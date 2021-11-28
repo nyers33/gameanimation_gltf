@@ -19,7 +19,7 @@ public:
 	void SetLocalTransform(unsigned int index, const Transform& transform);
 	Transform GetGlobalTransform(unsigned int index);
 	Transform operator[](unsigned int index);
-	void GetMatrixPalette(std::vector<mat4>& out);
+	void GetMatrixPalette(std::vector<glm::mat4>& out);
 	int GetParent(unsigned int index);
 	void SetParent(unsigned int index, int parent);
 

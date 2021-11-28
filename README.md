@@ -1,12 +1,14 @@
 # Hands-On C++ Game Animation Programming
 
 <p align="center"><img src="media/robot_sidebyside.png" width="640" /></p>
+<p align="center">KDAB's Qt3D Robot</p>
 <p align="center"><img src="media/knight_sidebyside.png" width="640" /></p>
+<p align="center">Paladin Prop J Nordstrom from Mixamo</p>
 
 ## Changes
 * glfw OpenGL context management instead of Win32
 * glew OpenGL loader instead of glad
-* added glm & gtest (math fixes)
+* replaced default math implementation with glm
 * new character rig and animation (robot & knight)
 * wip Rokoko ML animation retarget
 

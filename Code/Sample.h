@@ -14,7 +14,7 @@
 
 struct AnimationInstance {
 	Pose mAnimatedPose;
-	std::vector <mat4> mPosePalette;
+	std::vector <glm::mat4> mPosePalette;
 	unsigned int mClip;
 	float mPlayback;
 	Transform mModel;

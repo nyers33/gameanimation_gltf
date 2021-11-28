@@ -51,11 +51,6 @@ include(cmake/FetchGLFW.cmake)
 include(cmake/FetchGLM.cmake)
 include(cmake/FetchCGLTF.cmake)
 
-if(BUILD_TESTING)
-	include(cmake/FetchGTest.cmake)
-	enable_testing()
-endif()
-
 find_package(OpenGL REQUIRED)
 
 add_subdirectory(./Code)

@@ -1,10 +1,9 @@
 #ifndef _H_TRACK_
 #define _H_TRACK_
 
+#include "anim_glm.h"
 #include <vector>
 #include "Frame.h"
-#include "vec3.h"
-#include "quat.h"
 #include "Interpolation.h"
 
 template<typename T, int N>
@@ -33,7 +32,7 @@ public:
 };
 
 typedef Track<float, 1> ScalarTrack;
-typedef Track<vec3, 3> VectorTrack;
-typedef Track<quat, 4> QuaternionTrack;
+typedef Track<glm::vec3, 3> VectorTrack;
+typedef Track<glm::quat, 4> QuaternionTrack;
 
 #endif 

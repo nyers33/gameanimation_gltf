@@ -56,15 +56,15 @@ bool CCDSolver::Solve(const Transform& target) {
 	return Solve(target.position);
 }
 
-bool CCDSolver::Solve(const vec3& goal) {
+bool CCDSolver::Solve(const glm::vec3& goal) {
 	unsigned int size = Size();
 	if (size == 0) { return false; }
 	unsigned int last = size - 1;
 	float thresholdSq = mThreshold * mThreshold;
 
 	for (unsigned int i = 0; i < mNumSteps; ++i) {
-		vec3 effector = GetGlobalTransform(last).position;
-		if (lenSq(goal - effector) < thresholdSq) {
+		glm::vec3 effector = GetGlobalTransform(last).position;
+		if (glm::length2(goal - effector) < thresholdSq) {
 			return true;
 		}
 
@@ -72,30 +72,30 @@ bool CCDSolver::Solve(const vec3& goal) {
 			effector = GetGlobalTransform(last).position;
 
 			Transform world = GetGlobalTransform(j);
-			vec3 position = world.position;
-			quat rotation = world.rotation;
+			glm::vec3 position = world.position;
+			glm::quat rotation = world.rotation;
 
-			vec3 toEffector = effector - position;
-			vec3 toGoal = goal - position;
+			glm::vec3 toEffector = effector - position;
+			glm::vec3 toGoal = goal - position;
 
-			quat effectorToGoal;
-			if (lenSq(toGoal) > 0.00001f) {
+			glm::quat effectorToGoal;
+			if (glm::length2(toGoal) > 0.00001f) {
 				effectorToGoal = fromTo(toEffector, toGoal);
 			}
 
-			quat worldRotated = rotation * effectorToGoal;
-			quat localRotate = worldRotated * inverse(rotation);
+			glm::quat worldRotated = rotation * effectorToGoal;
+			glm::quat localRotate = worldRotated * inverse(rotation);
 			mIKChain[j].rotation = localRotate * mIKChain[j].rotation;
 
 			effector = GetGlobalTransform(last).position;
-			if (lenSq(goal - effector) < thresholdSq) {
+			if (glm::length2(goal - effector) < thresholdSq) {
 				return true;
 			}
 		}
 	}
 
-	vec3 effector = GetGlobalTransform(last).position;
-	if (lenSq(goal - effector) < thresholdSq) {
+	glm::vec3 effector = GetGlobalTransform(last).position;
+	if (glm::length2(goal - effector) < thresholdSq) {
 		return true;
 	}
 	return false;

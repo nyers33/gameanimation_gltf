@@ -1,19 +1,17 @@
 #ifndef _H_TRANSFORM_
 #define _H_TRANSFORM_
 
-#include "vec3.h"
-#include "mat4.h"
-#include "quat.h"
+#include "anim_glm.h"
 
 struct Transform {
-	vec3 position;
-	quat rotation;
-	vec3 scale;
+	glm::vec3 position;
+	glm::quat rotation;
+	glm::vec3 scale;
 	Transform() :
-		position(vec3(0, 0, 0)),
-		rotation(quat(0, 0, 0, 1)),
-		scale(vec3(1, 1, 1)) {}
-	Transform(const vec3& p, const quat& r, const vec3& s) :
+		position(glm::vec3(0, 0, 0)),
+		rotation(glm::quat(1, 0, 0, 0)),
+		scale(glm::vec3(1, 1, 1)) {}
+	Transform(const glm::vec3& p, const glm::quat& r, const glm::vec3& s) :
 		position(p), rotation(r), scale(s) {}
 }; // End of transform struct
 
@@ -22,9 +20,9 @@ Transform inverse(const Transform& t);
 Transform mix(const Transform& a, const Transform& b, float t);
 bool operator==(const Transform& a, const Transform& b);
 bool operator!=(const Transform& a, const Transform& b);
-mat4 transformToMat4(const Transform& t);
-Transform mat4ToTransform(const mat4& m);
-vec3 transformPoint(const Transform& a, const vec3& b);
-vec3 transformVector(const Transform& a, const vec3& b);
+glm::mat4 transformToMat4(const Transform& t);
+Transform mat4ToTransform(const glm::mat4& m);
+glm::vec3 transformPoint(const Transform& a, const glm::vec3& b);
+glm::vec3 transformVector(const Transform& a, const glm::vec3& b);
 
 #endif

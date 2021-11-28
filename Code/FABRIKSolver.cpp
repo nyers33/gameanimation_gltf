@@ -56,8 +56,8 @@ void FABRIKSolver::IKChainToWorld() {
 		mWorldChain[i] = world.position;
 
 		if (i >= 1) {
-			vec3 prev = mWorldChain[i - 1];
-			mLengths[i] = len(world.position - prev);
+			glm::vec3 prev = mWorldChain[i - 1];
+			mLengths[i] = glm::length(world.position - prev);
 		}
 	}
 	if (size > 0) {
@@ -65,29 +65,29 @@ void FABRIKSolver::IKChainToWorld() {
 	}
 }
 
-void FABRIKSolver::IterateBackward(const vec3& goal) {
+void FABRIKSolver::IterateBackward(const glm::vec3& goal) {
 	int size = (int)Size();
 	if (size > 0) {
 		mWorldChain[size - 1] = goal;
 	}
 
 	for (int i = size - 2; i >= 0; --i) {
-		vec3 direction = normalized(mWorldChain[i] - mWorldChain[i + 1]);
-		vec3 offset = direction * mLengths[i + 1];
+		glm::vec3 direction = glm::normalize(mWorldChain[i] - mWorldChain[i + 1]);
+		glm::vec3 offset = direction * mLengths[i + 1];
 		mWorldChain[i] = mWorldChain[i + 1] + offset;
 	}
 }
 
 
-void FABRIKSolver::IterateForward(const vec3& base) {
+void FABRIKSolver::IterateForward(const glm::vec3& base) {
 	unsigned int size = Size();
 	if (size > 0) {
 		mWorldChain[0] = base;
 	}
 
 	for (unsigned int i = 1; i < size; ++i) {
-		vec3 direction = normalized(mWorldChain[i] - mWorldChain[i - 1]);
-		vec3 offset = direction * mLengths[i];
+		glm::vec3 direction = glm::normalize(mWorldChain[i] - mWorldChain[i - 1]);
+		glm::vec3 offset = direction * mLengths[i];
 		mWorldChain[i] = mWorldChain[i - 1] + offset;
 	}
 }
@@ -99,16 +99,16 @@ void FABRIKSolver::WorldToIKChain() {
 	for (unsigned int i = 0; i < size - 1; ++i) {
 		Transform world = GetGlobalTransform(i);
 		Transform next = GetGlobalTransform(i + 1);
-		vec3 position = world.position;
-		quat rotation = world.rotation;
+		glm::vec3 position = world.position;
+		glm::quat rotation = world.rotation;
 
-		vec3 toNext = next.position - position;
+		glm::vec3 toNext = next.position - position;
 		toNext = inverse(rotation) * toNext;
 
-		vec3 toDesired = mWorldChain[i + 1] - position;
+		glm::vec3 toDesired = mWorldChain[i + 1] - position;
 		toDesired = inverse(rotation) * toDesired;
 
-		quat delta = fromTo(toNext, toDesired);
+		glm::quat delta = fromTo(toNext, toDesired);
 		mIKChain[i].rotation = delta * mIKChain[i].rotation;
 	}
 }
@@ -117,18 +117,18 @@ bool FABRIKSolver::Solve(const Transform& target) {
 	return Solve(target.position);
 }
 
-bool FABRIKSolver::Solve(const vec3& goal) {
+bool FABRIKSolver::Solve(const glm::vec3& goal) {
 	unsigned int size = Size();
 	if (size == 0) { return false; }
 	unsigned int last = size - 1;
 	float thresholdSq = mThreshold * mThreshold;
 	
 	IKChainToWorld();
-	vec3 base = mWorldChain[0];
+	glm::vec3 base = mWorldChain[0];
 
 	for (unsigned int i = 0; i < mNumSteps; ++i) {
-		vec3 effector = mWorldChain[last];
-		if (lenSq(goal - effector) < thresholdSq) {
+		glm::vec3 effector = mWorldChain[last];
+		if (glm::length2(goal - effector) < thresholdSq) {
 			WorldToIKChain();
 			return true;
 		}
@@ -138,8 +138,8 @@ bool FABRIKSolver::Solve(const vec3& goal) {
 	}
 
 	WorldToIKChain();
-	vec3 effector = GetGlobalTransform(last).position;
-	if (lenSq(goal - effector) < thresholdSq) {
+	glm::vec3 effector = GetGlobalTransform(last).position;
+	if (glm::length2(goal - effector) < thresholdSq) {
 		return true;
 	}
 

@@ -31,7 +31,7 @@ Pose& Skeleton::GetRestPose() {
 	return mRestPose;
 }
 
-std::vector<mat4>& Skeleton::GetInvBindPose() {
+std::vector<glm::mat4>& Skeleton::GetInvBindPose() {
 	return mInvBindPose;
 }
 

@@ -3,20 +3,20 @@
 #include "Transform.h"
 
 Mesh::Mesh() {
-	mPosAttrib = new Attribute<vec3>();
-	mNormAttrib = new Attribute<vec3>();
-	mUvAttrib = new Attribute<vec2>();
-	mWeightAttrib = new Attribute<vec4>();
-	mInfluenceAttrib = new Attribute<ivec4>();
+	mPosAttrib = new Attribute<glm::vec3>();
+	mNormAttrib = new Attribute<glm::vec3>();
+	mUvAttrib = new Attribute<glm::vec2>();
+	mWeightAttrib = new Attribute<glm::vec4>();
+	mInfluenceAttrib = new Attribute<glm::ivec4>();
 	mIndexBuffer = new IndexBuffer();
 }
 
 Mesh::Mesh(const Mesh& other) {
-	mPosAttrib = new Attribute<vec3>();
-	mNormAttrib = new Attribute<vec3>();
-	mUvAttrib = new Attribute<vec2>();
-	mWeightAttrib = new Attribute<vec4>();
-	mInfluenceAttrib = new Attribute<ivec4>();
+	mPosAttrib = new Attribute<glm::vec3>();
+	mNormAttrib = new Attribute<glm::vec3>();
+	mUvAttrib = new Attribute<glm::vec2>();
+	mWeightAttrib = new Attribute<glm::vec4>();
+	mInfluenceAttrib = new Attribute<glm::ivec4>();
 	mIndexBuffer = new IndexBuffer();
 	*this = other;
 }
@@ -44,23 +44,23 @@ Mesh::~Mesh() {
 	delete mIndexBuffer;
 }
 
-std::vector<vec3>& Mesh::GetPosition() {
+std::vector<glm::vec3>& Mesh::GetPosition() {
 	return mPosition;
 }
 
-std::vector<vec3>& Mesh::GetNormal() {
+std::vector<glm::vec3>& Mesh::GetNormal() {
 	return mNormal;
 }
 
-std::vector<vec2>& Mesh::GetTexCoord() {
+std::vector<glm::vec2>& Mesh::GetTexCoord() {
 	return mTexCoord;
 }
 
-std::vector<vec4>& Mesh::GetWeights() {
+std::vector<glm::vec4>& Mesh::GetWeights() {
 	return mWeights;
 }
 
-std::vector<ivec4>& Mesh::GetInfluences() {
+std::vector<glm::ivec4>& Mesh::GetInfluences() {
 	return mInfluences;
 }
 
@@ -152,18 +152,18 @@ void Mesh::CPUSkin(Skeleton& skeleton, Pose& pose) {
 	mSkinnedNormal.resize(numVerts);
 
 	pose.GetMatrixPalette(mPosePalette);
-	std::vector<mat4> invPosePalette = skeleton.GetInvBindPose();
+	std::vector<glm::mat4> invPosePalette = skeleton.GetInvBindPose();
 
 	for (unsigned int i = 0; i < numVerts; ++i) {
-		ivec4& j = mInfluences[i];
-		vec4& w = mWeights[i];
+		glm::ivec4& j = mInfluences[i];
+		glm::vec4& w = mWeights[i];
 
-		mat4 m0 = (mPosePalette[j.x] * invPosePalette[j.x]) * w.x;
-		mat4 m1 = (mPosePalette[j.y] * invPosePalette[j.y]) * w.y;
-		mat4 m2 = (mPosePalette[j.z] * invPosePalette[j.z]) * w.z;
-		mat4 m3 = (mPosePalette[j.w] * invPosePalette[j.w]) * w.w;
+		glm::mat4 m0 = (mPosePalette[j.x] * invPosePalette[j.x]) * w.x;
+		glm::mat4 m1 = (mPosePalette[j.y] * invPosePalette[j.y]) * w.y;
+		glm::mat4 m2 = (mPosePalette[j.z] * invPosePalette[j.z]) * w.z;
+		glm::mat4 m3 = (mPosePalette[j.w] * invPosePalette[j.w]) * w.w;
 
-		mat4 skin = m0 + m1 + m2 + m3;
+		glm::mat4 skin = m0 + m1 + m2 + m3;
 
 		mSkinnedPosition[i] = transformPoint(skin, mPosition[i]);
 		mSkinnedNormal[i] = transformVector(skin, mNormal[i]);

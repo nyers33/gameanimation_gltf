@@ -3,8 +3,6 @@
 
 #include "Shader.h"
 #include "Attribute.h"
-#include "vec3.h"
-#include "mat4.h"
 #include <vector>
 #include "Pose.h"
 #include "CCDSolver.h"
@@ -16,8 +14,8 @@ enum class DebugDrawMode {
 
 class DebugDraw {
 protected:
-	std::vector<vec3> mPoints;
-	Attribute<vec3>* mAttribs;
+	std::vector<glm::vec3> mPoints;
+	Attribute<glm::vec3>* mAttribs;
 	Shader* mShader;
 private:
 	DebugDraw(const DebugDraw&);
@@ -29,8 +27,8 @@ public:
 
 	unsigned int Size();
 	void Resize(unsigned int newSize);
-	vec3& operator[](unsigned int index);
-	void Push(const vec3& v);
+	glm::vec3& operator[](unsigned int index);
+	void Push(const glm::vec3& v);
 
 	void FromPose(Pose& pose);
 	void LinesFromIKSolver(CCDSolver& solver);
@@ -39,7 +37,7 @@ public:
 	void PointsFromIKSolver(FABRIKSolver& solver);
 
 	void UpdateOpenGLBuffers();
-	void Draw(DebugDrawMode mode, const vec3& color, const mat4& mvp);
+	void Draw(DebugDrawMode mode, const glm::vec3& color, const glm::mat4& mvp);
 };
 
 #endif

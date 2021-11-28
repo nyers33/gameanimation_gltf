@@ -28,8 +28,8 @@ void Sample::Initialize(const std::string& rootPath) {
 	mCPUAnimInfo.mAnimatedPose = mSkeleton.GetRestPose();
 	mCPUAnimInfo.mPosePalette.resize(mSkeleton.GetRestPose().Size());
 
-	mGPUAnimInfo.mModel.position = vec3(-0.75, 0, 0);
-	mCPUAnimInfo.mModel.position = vec3(0.75, 0, 0);
+	mGPUAnimInfo.mModel.position = glm::vec3(-0.75, 0, 0);
+	mCPUAnimInfo.mModel.position = glm::vec3(0.75, 0, 0);
 
 	mCPUCurrentPoseVisual = new DebugDraw();
 	mCPUCurrentPoseVisual->FromPose(mSkeleton.GetRestPose());
@@ -65,17 +65,17 @@ void Sample::Update(float deltaTime) {
 }
 
 void Sample::Render(float inAspectRatio) {
-	mat4 projection = perspective(60.0f, inAspectRatio, 0.01f, 1000.0f);
-	mat4 view = lookAt(vec3(0.0f, 1.0f + 0.1f, 2.5f), vec3(0.0f, 0.75f + 0.1f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-	mat4 model;
+	glm::mat4 projection = perspective(60.0f, inAspectRatio, 0.01f, 1000.0f);
+	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 1.0f + 0.1f, 2.5f), glm::vec3(0.0f, 0.75f + 0.1f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 model;
 
 	// CPU Skinned Mesh
 	model = transformToMat4(mCPUAnimInfo.mModel);
 	mStaticShader->Bind();
-	Uniform<mat4>::Set(mStaticShader->GetUniform("model"), model);
-	Uniform<mat4>::Set(mStaticShader->GetUniform("view"), view);
-	Uniform<mat4>::Set(mStaticShader->GetUniform("projection"), projection);
-	Uniform<vec3>::Set(mStaticShader->GetUniform("light"), vec3(1, 1, 1));
+	Uniform<glm::mat4>::Set(mStaticShader->GetUniform("model"), model);
+	Uniform<glm::mat4>::Set(mStaticShader->GetUniform("view"), view);
+	Uniform<glm::mat4>::Set(mStaticShader->GetUniform("projection"), projection);
+	Uniform<glm::vec3>::Set(mStaticShader->GetUniform("light"), glm::vec3(1, 1, 1));
 
 	mDiffuseTexture->Set(mStaticShader->GetUniform("tex0"), 0);
 	for (unsigned int i = 0, size = (unsigned int)mCPUMeshes.size(); i < size; ++i) {
@@ -87,20 +87,20 @@ void Sample::Render(float inAspectRatio) {
 	mStaticShader->UnBind();
 
 	// CPU Skinned Mesh Debug
-	model.tx += 1.25;
+	model[3][0] += 1.25;
 	mCPUCurrentPoseVisual->UpdateOpenGLBuffers();
-	mCPUCurrentPoseVisual->Draw(DebugDrawMode::Lines, vec3(0, 0, 1), projection * view * model);
+	mCPUCurrentPoseVisual->Draw(DebugDrawMode::Lines, glm::vec3(0, 0, 1), projection * view * model);
 
 	// GPU Skinned Mesh
 	model = transformToMat4(mGPUAnimInfo.mModel);
 	mSkinnedShader->Bind();
-	Uniform<mat4>::Set(mSkinnedShader->GetUniform("model"), model);
-	Uniform<mat4>::Set(mSkinnedShader->GetUniform("view"), view);
-	Uniform<mat4>::Set(mSkinnedShader->GetUniform("projection"), projection);
-	Uniform<vec3>::Set(mSkinnedShader->GetUniform("light"), vec3(1, 1, 1));
+	Uniform<glm::mat4>::Set(mSkinnedShader->GetUniform("model"), model);
+	Uniform<glm::mat4>::Set(mSkinnedShader->GetUniform("view"), view);
+	Uniform<glm::mat4>::Set(mSkinnedShader->GetUniform("projection"), projection);
+	Uniform<glm::vec3>::Set(mSkinnedShader->GetUniform("light"), glm::vec3(1, 1, 1));
 
-	Uniform<mat4>::Set(mSkinnedShader->GetUniform("pose"), mGPUAnimInfo.mPosePalette);
-	Uniform<mat4>::Set(mSkinnedShader->GetUniform("invBindPose"), mSkeleton.GetInvBindPose());
+	Uniform<glm::mat4>::Set(mSkinnedShader->GetUniform("pose"), mGPUAnimInfo.mPosePalette);
+	Uniform<glm::mat4>::Set(mSkinnedShader->GetUniform("invBindPose"), mSkeleton.GetInvBindPose());
 
 	mDiffuseTexture->Set(mSkinnedShader->GetUniform("tex0"), 0);
 	for (unsigned int i = 0, size = (unsigned int)mGPUMeshes.size(); i < size; ++i) {
@@ -112,9 +112,9 @@ void Sample::Render(float inAspectRatio) {
 	mSkinnedShader->UnBind();
 
 	// GPU Skinned Mesh Debug
-	model.tx += -1.25;
+	model[3][0] += -1.25;
 	mGPUCurrentPoseVisual->UpdateOpenGLBuffers();
-	mGPUCurrentPoseVisual->Draw(DebugDrawMode::Lines, vec3(0, 0, 1), projection * view * model);
+	mGPUCurrentPoseVisual->Draw(DebugDrawMode::Lines, glm::vec3(0, 0, 1), projection * view * model);
 }
 
 void Sample::Shutdown() {

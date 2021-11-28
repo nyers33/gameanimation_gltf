@@ -3,7 +3,7 @@
 #include "Draw.h"
 
 DebugDraw::DebugDraw() {
-	mAttribs = new Attribute<vec3>();
+	mAttribs = new Attribute<glm::vec3>();
 
 	mShader = new Shader(
 		"#version 330 core\n"
@@ -23,7 +23,7 @@ DebugDraw::DebugDraw() {
 }
 
 DebugDraw::DebugDraw(unsigned int size) {
-	mAttribs = new Attribute<vec3>();
+	mAttribs = new Attribute<glm::vec3>();
 
 	mShader = new Shader(
 		"#version 330 core\n"
@@ -57,11 +57,11 @@ void DebugDraw::Resize(unsigned int newSize) {
 	mPoints.resize(newSize);
 }
 
-vec3& DebugDraw::operator[](unsigned int index) {
+glm::vec3& DebugDraw::operator[](unsigned int index) {
 	return mPoints[index];
 }
 
-void DebugDraw::Push(const vec3& v) {
+void DebugDraw::Push(const glm::vec3& v) {
 	mPoints.push_back(v);
 }
 
@@ -134,10 +134,10 @@ void DebugDraw::PointsFromIKSolver(FABRIKSolver& solver) {
 	}
 }
 
-void DebugDraw::Draw(DebugDrawMode mode, const vec3& color, const mat4& mvp) {
+void DebugDraw::Draw(DebugDrawMode mode, const glm::vec3& color, const glm::mat4& mvp) {
 	mShader->Bind();
-	Uniform<mat4>::Set(mShader->GetUniform("mvp"), mvp);
-	Uniform<vec3>::Set(mShader->GetUniform("color"), color);
+	Uniform<glm::mat4>::Set(mShader->GetUniform("mvp"), mvp);
+	Uniform<glm::vec3>::Set(mShader->GetUniform("color"), color);
 	mAttribs->BindTo(mShader->GetAttribute("position"));
 	if (mode == DebugDrawMode::Lines) {
 		::Draw(Size(), DrawMode::Lines);
