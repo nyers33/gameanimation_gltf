@@ -1,8 +1,8 @@
 #include "Track.h"
 
-template Track<float, 1>;
-template Track<glm::vec3, 3>;
-template Track<glm::quat, 4>;
+template class Track<float, 1>;
+template class Track<glm::vec3, 3>;
+template class Track<glm::quat, 4>;
 
 namespace TrackHelpers {
 	inline float Interpolate(float a, float b, float t) {

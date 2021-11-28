@@ -2,15 +2,15 @@
 #include <GL/glew.h>
 #include "anim_glm.h"
 
-template Uniform<int>;
-template Uniform<glm::ivec4>;
-template Uniform<glm::ivec2>;
-template Uniform<float>;
-template Uniform<glm::vec2>;
-template Uniform<glm::vec3>;
-template Uniform<glm::vec4>;
-template Uniform<glm::quat>;
-template Uniform<glm::mat4>;
+template class Uniform<int>;
+template class Uniform<glm::ivec4>;
+template class Uniform<glm::ivec2>;
+template class Uniform<float>;
+template class Uniform<glm::vec2>;
+template class Uniform<glm::vec3>;
+template class Uniform<glm::vec4>;
+template class Uniform<glm::quat>;
+template class Uniform<glm::mat4>;
 
 #define UNIFORM_IMPL(gl_func, tType, dType) \
 template<> \

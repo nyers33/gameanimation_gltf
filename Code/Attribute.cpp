@@ -2,13 +2,13 @@
 #include <GL/glew.h>
 #include "anim_glm.h"
 
-template Attribute<int>;
-template Attribute<float>;
-template Attribute<glm::vec2>;
-template Attribute<glm::vec3>;
-template Attribute<glm::vec4>;
-template Attribute<glm::ivec4>;
-template Attribute<glm::quat>;
+template class Attribute<int>;
+template class Attribute<float>;
+template class Attribute<glm::vec2>;
+template class Attribute<glm::vec3>;
+template class Attribute<glm::vec4>;
+template class Attribute<glm::ivec4>;
+template class Attribute<glm::quat>;
 
 template<typename T>
 Attribute<T>::Attribute() {
